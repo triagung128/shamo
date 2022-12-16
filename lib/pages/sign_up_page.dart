@@ -8,7 +8,7 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget header() {
       return Container(
-        margin: const EdgeInsets.only(top: 30),
+        margin: EdgeInsets.only(top: defaultMargin),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -222,9 +222,9 @@ class SignUpPage extends StatelessWidget {
       return Container(
         height: 50,
         width: double.infinity,
-        margin: const EdgeInsets.only(top: 30),
+        margin: EdgeInsets.only(top: defaultMargin),
         child: TextButton(
-          onPressed: () {},
+          onPressed: () => Navigator.pushNamed(context, '/home'),
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,
             shape: RoundedRectangleBorder(
@@ -244,7 +244,7 @@ class SignUpPage extends StatelessWidget {
 
     Widget footer() {
       return Container(
-        margin: const EdgeInsets.symmetric(vertical: 30),
+        margin: EdgeInsets.symmetric(vertical: defaultMargin),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
