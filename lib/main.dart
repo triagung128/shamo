@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shamo/pages/cart_page.dart';
 import 'package:shamo/pages/checkout_page.dart';
 import 'package:shamo/pages/checkout_success_page.dart';
@@ -9,6 +10,7 @@ import 'package:shamo/pages/product_page.dart';
 import 'package:shamo/pages/sign_in_page.dart';
 import 'package:shamo/pages/sign_up_page.dart';
 import 'package:shamo/pages/splash_page.dart';
+import 'package:shamo/providers/auth_provider.dart';
 
 void main() => runApp(const MyApp());
 
@@ -17,20 +19,27 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/': (_) => const SplashPage(),
-        '/sign-in': (_) => const SignInPage(),
-        '/sign-up': (_) => const SignUpPage(),
-        '/home': (_) => const MainPage(),
-        '/detail-chat': (_) => const DetailChatPage(),
-        '/edit-profile': (_) => const EditProfilePage(),
-        '/product': (_) => const ProductPage(),
-        '/cart': (_) => const CartPage(),
-        '/checkout': (_) => const CheckoutPage(),
-        '/checkout-success': (_) => const CheckoutSuccessPage(),
-      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        routes: {
+          '/': (_) => const SplashPage(),
+          '/sign-in': (_) => const SignInPage(),
+          '/sign-up': (_) => const SignUpPage(),
+          '/home': (_) => const MainPage(),
+          '/detail-chat': (_) => const DetailChatPage(),
+          '/edit-profile': (_) => const EditProfilePage(),
+          '/product': (_) => const ProductPage(),
+          '/cart': (_) => const CartPage(),
+          '/checkout': (_) => const CheckoutPage(),
+          '/checkout-success': (_) => const CheckoutSuccessPage(),
+        },
+      ),
     );
   }
 }
