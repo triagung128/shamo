@@ -19,5 +19,5 @@ class CartModel {
         'quantity': quantity,
       };
 
-  double getTotalPrice() => product.price * quantity;
+  double getTotalPrice() => product.price! * quantity;
 }

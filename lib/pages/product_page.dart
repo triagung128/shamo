@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shamo/models/product_model.dart';
+import 'package:shamo/pages/detail_chat_page.dart';
 import 'package:shamo/providers/cart_provider.dart';
 import 'package:shamo/providers/wishlist_provider.dart';
 import 'package:shamo/theme.dart';
@@ -156,7 +157,7 @@ class _ProductPageState extends State<ProductPage> {
             ),
           ),
           CarouselSlider(
-            items: widget.product.galleries
+            items: widget.product.galleries!
                 .map((image) => Image.network(
                       image.url,
                       width: MediaQuery.of(context).size.width,
@@ -174,7 +175,7 @@ class _ProductPageState extends State<ProductPage> {
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: widget.product.galleries.map((_) {
+            children: widget.product.galleries!.map((_) {
               index++; // ketika index++ maka index awal -1 menjadi 0
               return indicator(index);
             }).toList(),
@@ -212,14 +213,14 @@ class _ProductPageState extends State<ProductPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.product.name,
+                              widget.product.name!,
                               style: primaryTextStyle.copyWith(
                                 fontSize: 18,
                                 fontWeight: semiBold,
                               ),
                             ),
                             Text(
-                              widget.product.category.name,
+                              widget.product.category!.name,
                               style: primaryTextStyle.copyWith(fontSize: 12),
                             ),
                           ],
@@ -300,7 +301,7 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        widget.product.description,
+                        widget.product.description!,
                         style: subtitleTextStyle.copyWith(fontWeight: light),
                         textAlign: TextAlign.justify,
                       ),
@@ -350,7 +351,14 @@ class _ProductPageState extends State<ProductPage> {
         child: Row(
           children: [
             GestureDetector(
-              onTap: () => Navigator.pushNamed(context, '/detail-chat'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => DetailChatPage(widget.product),
+                  ),
+                );
+              },
               child: Container(
                 width: 54,
                 height: 54,

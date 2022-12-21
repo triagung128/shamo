@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "348917288929",
+    "project_id": "shamo-b39b9",
+    "storage_bucket": "shamo-b39b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:348917288929:android:aa71fbbf6eed5fff108ca0",
+        "android_client_info": {
+          "package_name": "com.triagung.shamo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "348917288929-hboth9ciom79n8a72oe1dj7dc4ev2eo5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlCSnw0reini-s62l5-j-qH-HcH_6VTOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "348917288929-hboth9ciom79n8a72oe1dj7dc4ev2eo5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

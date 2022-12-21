@@ -68,7 +68,7 @@ class CartProvider extends ChangeNotifier {
   double totalPrice() {
     double total = 0;
     for (var item in _carts) {
-      total += (item.quantity * item.product.price);
+      total += (item.quantity * item.product.price!);
     }
     return total;
   }
