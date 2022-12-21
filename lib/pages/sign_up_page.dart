@@ -1,11 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shamo/providers/auth_provider.dart';
 import 'package:shamo/theme.dart';
+import 'package:shamo/widgets/loading_button.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
   @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  final _nameController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
+    handleSignUp() async {
+      setState(() => _isLoading = true);
+
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+      if (await authProvider.register(
+        name: _nameController.text,
+        username: _usernameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+      )) {
+        Navigator.pushNamed(context, '/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: alertColor,
+            content: const Text(
+              'Gagal Register!',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+
+      setState(() => _isLoading = false);
+    }
+
     Widget header() {
       return Container(
         margin: EdgeInsets.only(top: defaultMargin),
@@ -60,6 +102,7 @@ class SignUpPage extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextFormField(
+                        controller: _nameController,
                         style: primaryTextStyle,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Your Full Name',
@@ -107,6 +150,7 @@ class SignUpPage extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextFormField(
+                        controller: _usernameController,
                         style: primaryTextStyle,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Your Username',
@@ -154,6 +198,7 @@ class SignUpPage extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextFormField(
+                        controller: _emailController,
                         style: primaryTextStyle,
                         decoration: InputDecoration.collapsed(
                           hintText: 'Your Email Address',
@@ -201,6 +246,7 @@ class SignUpPage extends StatelessWidget {
                     const SizedBox(width: 16),
                     Expanded(
                       child: TextFormField(
+                        controller: _passwordController,
                         style: primaryTextStyle,
                         obscureText: true,
                         decoration: InputDecoration.collapsed(
@@ -224,7 +270,10 @@ class SignUpPage extends StatelessWidget {
         width: double.infinity,
         margin: EdgeInsets.only(top: defaultMargin),
         child: TextButton(
-          onPressed: () => Navigator.pushNamed(context, '/home'),
+          onPressed: () {
+            FocusManager.instance.primaryFocus?.unfocus();
+            handleSignUp();
+          },
           style: TextButton.styleFrom(
             backgroundColor: primaryColor,
             shape: RoundedRectangleBorder(
@@ -281,7 +330,7 @@ class SignUpPage extends StatelessWidget {
                 usernameInput(),
                 emailInput(),
                 passwordInput(),
-                signUpButton(),
+                _isLoading ? const LoadingButton() : signUpButton(),
                 footer(),
               ],
             ),
@@ -289,5 +338,14 @@ class SignUpPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }
