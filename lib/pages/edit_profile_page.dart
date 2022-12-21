@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shamo/providers/auth_provider.dart';
 import 'package:shamo/theme.dart';
 
 class EditProfilePage extends StatelessWidget {
@@ -6,6 +8,9 @@ class EditProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    final user = authProvider.user;
+
     PreferredSizeWidget header() {
       return AppBar(
         backgroundColor: backgroundColor1,
@@ -46,7 +51,7 @@ class EditProfilePage extends StatelessWidget {
             TextFormField(
               style: primaryTextStyle,
               decoration: InputDecoration(
-                hintText: 'Alex Keinnzal',
+                hintText: user.name,
                 hintStyle: primaryTextStyle,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: subtitleColor),
@@ -71,7 +76,7 @@ class EditProfilePage extends StatelessWidget {
             TextFormField(
               style: primaryTextStyle,
               decoration: InputDecoration(
-                hintText: '@alexkeinn',
+                hintText: user.username,
                 hintStyle: primaryTextStyle,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: subtitleColor),
@@ -96,7 +101,7 @@ class EditProfilePage extends StatelessWidget {
             TextFormField(
               style: primaryTextStyle,
               decoration: InputDecoration(
-                hintText: 'alex.keinn@mail.com',
+                hintText: user.email,
                 hintStyle: primaryTextStyle,
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(color: subtitleColor),
@@ -119,10 +124,11 @@ class EditProfilePage extends StatelessWidget {
               Container(
                 height: 100,
                 width: 100,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage('assets/image_profile.png'),
+                    fit: BoxFit.fill,
+                    image: NetworkImage(user.profilePhotoUrl),
                   ),
                 ),
               ),
