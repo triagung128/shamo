@@ -262,7 +262,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextButton(
-                    onPressed: () => handleCheckout,
+                    onPressed: () => handleCheckout(),
                     child: Text(
                       'Checkout Now',
                       style: primaryTextStyle.copyWith(

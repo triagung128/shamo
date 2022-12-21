@@ -18,7 +18,7 @@ class TransactionService {
     };
     final body = jsonEncode({
       'address': 'Marsemoon',
-      'item': carts
+      'items': carts
           .map((cart) => {
                 'id': cart.product.id,
                 'quantity': cart.quantity,
