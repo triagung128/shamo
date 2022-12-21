@@ -1,37 +1,103 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shamo/models/product_model.dart';
+import 'package:shamo/providers/wishlist_provider.dart';
 import 'package:shamo/theme.dart';
 
 class ProductPage extends StatefulWidget {
-  const ProductPage({super.key});
+  const ProductPage(this.product, {super.key});
+
+  final ProductModel product;
 
   @override
   State<ProductPage> createState() => _ProductPageState();
 }
 
 class _ProductPageState extends State<ProductPage> {
-  final List images = [
-    'assets/image_shoes.png',
-    'assets/image_shoes.png',
-    'assets/image_shoes.png'
-  ];
-
   final List familiarShoes = [
     'assets/image_shoes.png',
-    'assets/image_shoes.png',
-    'assets/image_shoes.png',
-    'assets/image_shoes.png',
-    'assets/image_shoes.png',
-    'assets/image_shoes.png',
-    'assets/image_shoes.png',
-    'assets/image_shoes.png',
-    'assets/image_shoes.png'
+    'assets/image_shoes2.png',
+    'assets/image_shoes3.png',
+    'assets/image_shoes4.png',
+    'assets/image_shoes5.png',
+    'assets/image_shoes6.png',
+    'assets/image_shoes7.png',
+    'assets/image_shoes8.png',
   ];
 
   int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+
+    Future<void> showSuccessDialog() async {
+      return showDialog(
+        context: context,
+        builder: (_) => SizedBox(
+          width: MediaQuery.of(context).size.width - (2 * defaultMargin),
+          child: AlertDialog(
+            backgroundColor: backgroundColor3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Icon(
+                        Icons.close,
+                        color: primaryTextColor,
+                      ),
+                    ),
+                  ),
+                  Image.asset('assets/icon_success.png', width: 100),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Hurray :)',
+                    style: primaryTextStyle.copyWith(
+                      fontSize: 18,
+                      fontWeight: semiBold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    'Item added successfully',
+                    style: secondaryTextStyle,
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: 154,
+                    height: 44,
+                    child: TextButton(
+                      onPressed: () {},
+                      style: TextButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        'View My Cart',
+                        style: primaryTextStyle.copyWith(
+                          fontSize: 16,
+                          fontWeight: medium,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
     Widget indicator(int index) {
       return Container(
         width: currentIndex == index ? 16 : 4,
@@ -85,9 +151,9 @@ class _ProductPageState extends State<ProductPage> {
             ),
           ),
           CarouselSlider(
-            items: images
-                .map((image) => Image.asset(
-                      image,
+            items: widget.product.galleries
+                .map((image) => Image.network(
+                      image.url,
                       width: MediaQuery.of(context).size.width,
                       height: 310,
                       fit: BoxFit.cover,
@@ -103,7 +169,7 @@ class _ProductPageState extends State<ProductPage> {
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: images.map((_) {
+            children: widget.product.galleries.map((_) {
               index++; // ketika index++ maka index awal -1 menjadi 0
               return indicator(index);
             }).toList(),
@@ -141,20 +207,52 @@ class _ProductPageState extends State<ProductPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'TERREX URBAN LOW',
+                              widget.product.name,
                               style: primaryTextStyle.copyWith(
                                 fontSize: 18,
                                 fontWeight: semiBold,
                               ),
                             ),
                             Text(
-                              'Hiking',
+                              widget.product.category.name,
                               style: primaryTextStyle.copyWith(fontSize: 12),
                             ),
                           ],
                         ),
                       ),
-                      Image.asset('assets/button_wishlist.png', width: 46),
+                      GestureDetector(
+                        onTap: () {
+                          wishlistProvider.setProduct(widget.product);
+
+                          if (wishlistProvider.isWishlist(widget.product)) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: secondaryColor,
+                                content: const Text(
+                                  'Has been added to the wishlist',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: alertColor,
+                                content: const Text(
+                                  'Has been removed from the wishlist',
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: Image.asset(
+                          wishlistProvider.isWishlist(widget.product)
+                              ? 'assets/button_wishlist_blue.png'
+                              : 'assets/button_wishlist.png',
+                          width: 46,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -175,7 +273,7 @@ class _ProductPageState extends State<ProductPage> {
                         style: primaryTextStyle,
                       ),
                       Text(
-                        '\$143,98',
+                        '\$ ${widget.product.price}',
                         style: priceTextStyle.copyWith(
                           fontSize: 16,
                           fontWeight: semiBold,
@@ -197,7 +295,7 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
+                        widget.product.description,
                         style: subtitleTextStyle.copyWith(fontWeight: light),
                         textAlign: TextAlign.justify,
                       ),
@@ -246,12 +344,15 @@ class _ProductPageState extends State<ProductPage> {
         color: backgroundColor1,
         child: Row(
           children: [
-            Container(
-              width: 54,
-              height: 54,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/button_chat.png'),
+            GestureDetector(
+              onTap: () => Navigator.pushNamed(context, '/detail-chat'),
+              child: Container(
+                width: 54,
+                height: 54,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/button_chat.png'),
+                  ),
                 ),
               ),
             ),
@@ -261,7 +362,7 @@ class _ProductPageState extends State<ProductPage> {
                 width: 54,
                 height: 54,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () => showSuccessDialog(),
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
